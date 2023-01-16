@@ -6,6 +6,6 @@ router.get("/get-all", productController.getAll);
 
 router.post("/edit", productController.editProduct);
 
-router.post("/remove-product", productController.removeProduct);
+router.get("/remove-product", productController.removeProduct);
 
 module.exports = router;

@@ -1,12 +1,12 @@
-const dotenv = require('dotenv');
+const dotenv = require('dotenv').config();
 const express = require('express');
 const unless = require('express-unless');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const userRoute = require('./Routes/userRoute');
-const auth = require('./Middlewares/auth');
+const authRoute = require('./routes/auth');
+const productRoute = require('./routes/products');
+const auth = require('./middleware/auth');
 
-dotenv.config();
 const app = express();
 
 app.use(cors());
@@ -18,35 +18,33 @@ auth.verifyToken.unless = unless;
 app.use(
 	auth.verifyToken.unless({
 		path: [
-			{ url: '/user/login', method: ['POST'] },
-			{ url: '/user/register', method: ['POST'] },
+			{ url: '/auth/login', method: ['POST'] },
+			{ url: '/auth/register', method: ['POST'] },
 		],
 	})
 );
 
 //MONGODB CONNECTION
 
-mongoose.Promise = global.Promise;
-mongoose
-	.connect(process.env.MONGO_URI, {
-		useNewUrlParser: true,
-		useUnifiedTopology: true,
-	})
-	.then(() => {
-		console.log('Database connection is succesfull!');
-	})
-	.catch((err) => {
-		console.log(`Database connection failed!`);
-		console.log(`Details : ${err}`);
-	});
+// mongoose.Promise = global.Promise;
+// mongoose
+// 	.connect(process.env.MONGO_URI, {
+// 		useNewUrlParser: true,
+// 		useUnifiedTopology: true,
+// 	})
+// 	.then(() => {
+// 		console.log('Database connection is succesfull!');
+// 	})
+// 	.catch((err) => {
+// 		console.log(`Database connection failed!`);
+// 		console.log(`Details : ${err}`);
+// 	});
 
 //ROUTES
 
-app.use('/user', userRoute);
-app.use('/board', boardRoute);
-app.use('/list', listRoute);
-app.use('/card', cardRoute);
+app.use('/auth', authRoute);
+app.use('/products', productRoute);
 
-app.listen(process.env.PORT, () => {
-	console.log(`Server is online! Port: 3000`);
+app.listen(8000, () => {
+	console.log(`Server is online! Port: 8000`);
 });
